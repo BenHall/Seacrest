@@ -22,7 +22,8 @@ namespace Seacrest.Analyser.Tests
                                                                         })
                                     .Build();
 
-            assemblyTwo = builder.AssemblyName("TestAssembly2")
+            AssemblyBuilder builder2 = new AssemblyBuilder();
+            assemblyTwo = builder2.AssemblyName("TestAssembly2")
                                     .WithClassAndMethods("Class1", new Dictionary<string, string>
                                                                         {
                                                                             {"Method1", "System.Console.WriteLine(\"Test\");"},
@@ -36,10 +37,10 @@ namespace Seacrest.Analyser.Tests
             var newMethodName = "Method2";
             
             AssemblyDiffer differ = new AssemblyDiffer();
-            IEnumerable<ChangedMethods> newMethods = differ.FindNewMethods(assemblyOne.Path, assemblyTwo.Path);
+            IEnumerable<ChangedMethod> newMethods = differ.FindNewMethods(assemblyOne.Path, assemblyTwo.Path);
 
             Assert.That(newMethods.Count(), Is.EqualTo(1));
-            Assert.That(newMethods.First().Name, Is.EqualTo(newMethodName));
+            Assert.That(newMethods.First().MethodName, Is.EqualTo(newMethodName));
         }
     }
 }

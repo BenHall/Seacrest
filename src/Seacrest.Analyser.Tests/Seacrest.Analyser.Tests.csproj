@@ -48,6 +48,12 @@
     <Compile Include="Builders\AssemblyBuilderExample.cs" />
     <Compile Include="Builders\AssemblyBuilderResult.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Seacrest.Analyser\Seacrest.Analyser.csproj">
+      <Project>{FA39FC21-3A8E-455E-9BD4-2717DA3F6516}</Project>
+      <Name>Seacrest.Analyser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
