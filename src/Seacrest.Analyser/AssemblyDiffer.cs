@@ -76,7 +76,7 @@ namespace Seacrest.Analyser
 
                 var oldInstruction = oldMethodBody.Body.Instructions[index];
 
-                if (newInstruction.Operand != null || oldInstruction.Operand != null)
+                if (newInstruction.Operand != null && oldInstruction.Operand != null)
                 {
                     if (!newInstruction.Operand.ToString().Equals(oldInstruction.Operand.ToString()))
                         return true;
