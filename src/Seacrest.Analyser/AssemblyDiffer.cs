@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Mono.Cecil;
 using System.Linq;
 
@@ -10,24 +9,50 @@ namespace Seacrest.Analyser
         public IEnumerable<ChangedMethod> FindModifiedMethods(string baseAssemblyPath, string compareToAssemblyPath)
         {
             List<ChangedMethod> changedMethods = new List<ChangedMethod>();
-            var newModules = ModuleDefinition.ReadModule(compareToAssemblyPath);
-            var oldModules = ModuleDefinition.ReadModule(baseAssemblyPath);
+            var classesInNewAssembly = ModuleDefinition.ReadModule(compareToAssemblyPath);
+            var classesInOldAssembly = ModuleDefinition.ReadModule(baseAssemblyPath);
 
-            foreach (TypeDefinition typeDefinition in newModules.Types)
+            foreach (TypeDefinition classInUpdatedAssembly in classesInNewAssembly.Types)
             {
-                var oldType = oldModules.Types.SingleOrDefault(t => t.Name == typeDefinition.Name);
-                foreach (var methodDefinition in typeDefinition.Methods)
+                TypeDefinition oldClass = FindOldClass(classesInOldAssembly, classInUpdatedAssembly);
+                foreach (var updatedMethod in classInUpdatedAssembly.Methods)
                 {
-                    var oldMethodBody = oldType.Methods.SingleOrDefault(m => m.Name == methodDefinition.Name);
-
-                    if (oldMethodBody == null)
-                        changedMethods.Add(GetChangedMethod(methodDefinition, ChangeReason.New));
-                    else if (HasChanged(methodDefinition, oldMethodBody))
-                        changedMethods.Add(GetChangedMethod(methodDefinition, ChangeReason.Updated));
+                    var method = DetermineIfMethodHasChanged(oldClass, updatedMethod);
+                    if(method != null && method.MethodName != ".ctor")
+                        changedMethods.Add(method);
                 }
             }
 
             return changedMethods;
+        }
+
+        private ChangedMethod DetermineIfMethodHasChanged(TypeDefinition oldClass, MethodDefinition updatedMethod)
+        {
+            ChangedMethod changedMethod = null;
+
+            MethodDefinition oldMethodBody = FindOldMethodBody(oldClass, updatedMethod);
+            if (oldMethodBody == null)
+                changedMethod = GetChangedMethod(updatedMethod, ChangeReason.New);
+
+            else if (HasChanged(updatedMethod, oldMethodBody))
+            {
+                changedMethod = GetChangedMethod(updatedMethod, ChangeReason.Updated);
+            }
+
+            return changedMethod;
+        }
+
+        private TypeDefinition FindOldClass(ModuleDefinition oldModules, TypeDefinition typeDefinition)
+        {
+            return oldModules.Types.SingleOrDefault(t => t.Name == typeDefinition.Name);
+        }
+
+        private MethodDefinition FindOldMethodBody(TypeDefinition oldType, MethodDefinition methodDefinition)
+        {
+            MethodDefinition oldMethodBody = null;
+            if (oldType != null)
+                oldMethodBody = oldType.Methods.SingleOrDefault(m => m.Name == methodDefinition.Name);
+            return oldMethodBody;
         }
 
         private static ChangedMethod GetChangedMethod(MemberReference operand, ChangeReason changeStatus)
