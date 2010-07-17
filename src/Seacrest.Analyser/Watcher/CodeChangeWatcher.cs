@@ -4,29 +4,18 @@ namespace Seacrest.Analyser.Watcher
 {
     public class CodeChangeWatcher
     {
-        static FileSystemWatcher watcher;
-        private string _path;
-
         public delegate void CodeChangedHandler(object sender, CodeChangedEventArgs e);
         public event CodeChangedHandler CodeChanged;
 
-        public CodeChangeWatcher(string path)
-        {
-            _path = path;
-        }
-
         public void Watch(string path)
         {
-            _path = path;
-
-            watcher = new FileSystemWatcher(_path);
+            var watcher = new FileSystemWatcher(path);
             watcher.IncludeSubdirectories = true;
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite 
                                     | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.Filter = "*.cs";
 
             watcher.Changed += fileChanged;
-            watcher.Deleted += fileChanged;
             watcher.Renamed += fileRenamed;
 
             watcher.EnableRaisingEvents = true;
