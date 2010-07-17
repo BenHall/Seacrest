@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Mono.Cecil;
 using System.Linq;
 
@@ -8,7 +7,7 @@ namespace Seacrest.Analyser
 {
     public class AssemblyDiffer
     {
-        public IEnumerable<ChangedMethod> FindNewMethods(string baseAssemblyPath, string compareToAssemblyPath)
+        public IEnumerable<ChangedMethod> FindModifiedMethods(string baseAssemblyPath, string compareToAssemblyPath)
         {
             List<ChangedMethod> changedMethods = new List<ChangedMethod>();
             var newModules = ModuleDefinition.ReadModule(compareToAssemblyPath);
