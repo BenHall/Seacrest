@@ -43,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyDiffer.cs" />
+    <Compile Include="Exceptions\BuildFailedException.cs" />
     <Compile Include="ChangedMethod.cs" />
     <Compile Include="ChangeReason.cs" />
+    <Compile Include="SolutionBuilder.cs" />
     <Compile Include="Watcher\CodeChangedEventArgs.cs" />
     <Compile Include="Watcher\CodeChangeWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
