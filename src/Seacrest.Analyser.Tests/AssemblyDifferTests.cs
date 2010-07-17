@@ -31,6 +31,7 @@ namespace Seacrest.Analyser.Tests
                                                                         })
                                     .Build();
         }
+
         [Test]
         public void FindNewMethods_should_return_the_the_additional_method_added_to_assembly2()
         {
@@ -41,6 +42,15 @@ namespace Seacrest.Analyser.Tests
 
             Assert.That(newMethods.Count(), Is.EqualTo(1));
             Assert.That(newMethods.First().MethodName, Is.EqualTo(newMethodName));
+        }
+
+        [Test]
+        public void New_methods_have_changereason_set_to_true()
+        {
+            AssemblyDiffer differ = new AssemblyDiffer();
+            IEnumerable<ChangedMethod> newMethods = differ.FindNewMethods(assemblyOne.Path, assemblyTwo.Path);
+
+            Assert.That(newMethods.First().ChangeReason, Is.EqualTo(ChangeReason.New));
         }
     }
 }

@@ -22,19 +22,19 @@ namespace Seacrest.Analyser
                     var oldMethodBody = oldType.Methods.SingleOrDefault(m => m.Name == methodDefinition.Name);
 
                     if (oldMethodBody == null)
-                        changedMethods.Add(GetChangedMethod(methodDefinition, ChangedContentStatus.New));
+                        changedMethods.Add(GetChangedMethod(methodDefinition, ChangeReason.New));
                     else if (HasChanged(methodDefinition, oldMethodBody))
-                        changedMethods.Add(GetChangedMethod(methodDefinition, ChangedContentStatus.Updated));
+                        changedMethods.Add(GetChangedMethod(methodDefinition, ChangeReason.Updated));
                 }
             }
 
             return changedMethods;
         }
 
-        private static ChangedMethod GetChangedMethod(MemberReference operand, ChangedContentStatus changeStatus)
+        private static ChangedMethod GetChangedMethod(MemberReference operand, ChangeReason changeStatus)
         {
             var changedMethod = new ChangedMethod();
-            changedMethod.Status = changeStatus;
+            changedMethod.ChangeReason = changeStatus;
             changedMethod.AssemblyName = operand.DeclaringType.Scope.Name;
             changedMethod.NamespaceName = operand.DeclaringType.Namespace;
             changedMethod.ClassName = operand.DeclaringType.Name;
@@ -61,11 +61,5 @@ namespace Seacrest.Analyser
 
             return false;
         }
-    }
-
-    public enum ChangedContentStatus
-    {
-        New,
-        Updated
     }
 }
