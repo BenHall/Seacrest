@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Seacrest.Analyser.Exceptions;
+using System.Text.RegularExpressions;
 using Seacrest.Analyser.Parsers.TestExplorer;
 
 namespace Seacrest.Analyser.Execution
 {
     public class GallioTestRunner
     {
-        public bool Execute(List<Test> testsToExecute)
+        public TestExecutionResults Execute(List<Test> testsToExecute)
         {
             string gallioEchoExe = @"D:\Users\Ben Hall\Downloads\GallioBundle-3.2.517.0\bin - Copy\Gallio.Echo.exe";
             Process process = InternalProcessExecutor.Start(gallioEchoExe, CreateArguments(testsToExecute));
@@ -21,15 +21,11 @@ namespace Seacrest.Analyser.Execution
             if (process.HasExited)
             {
                 var exitCode = process.ExitCode;
-                if (exitCode != 0)
-                {
-                    var substring = output;
-                    throw new TestFailedException(substring.Trim());
-                }
-                return true;
+                var results = Parse(output, exitCode);
+                return results;
             }
 
-            return false;
+            return null;
         }
 
         public string CreateArguments(List<Test> testsToExecute)
@@ -52,6 +48,28 @@ namespace Seacrest.Analyser.Execution
         private List<string> BuildFilterList(IEnumerable<Test> testsToExecute)
         {
             return testsToExecute.Select(test => string.Format("(Type:{0} AND Member:{1})", test.ClassName, test.MethodName)).ToList();
+        }
+
+        public TestExecutionResults Parse(string output, int exitCode)
+        {
+            string pattern = "(?<run>.+) run, (?<passed>.+) passed, (?<failed>.+) failed, (?<inconclusive>.+) inconclusive, (?<skipped>.+) skipped";
+            Regex regex = new Regex(pattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
+
+            Match m = regex.Match(output);
+            if (m.Success)
+            {
+                TestExecutionResults results = new TestExecutionResults();
+                results.Run = Convert.ToInt32(m.Groups["run"].Value.Trim());
+                results.Passed = Convert.ToInt32(m.Groups["passed"].Value.Trim());
+                results.Failed = Convert.ToInt32(m.Groups["failed"].Value.Trim());
+                results.Skipped = Convert.ToInt32(m.Groups["inconclusive"].Value.Trim()) + Convert.ToInt32(m.Groups["skipped"].Value.Trim());
+
+                results.ExecutionResult = exitCode == 0 ? TestExecutionResult.Passed : TestExecutionResult.Failed;
+
+                return results;
+            }
+
+            return null;
         }
     }
 }

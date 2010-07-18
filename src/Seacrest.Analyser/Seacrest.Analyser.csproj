@@ -46,6 +46,8 @@
     <Compile Include="Execution\GallioTestRunner.cs" />
     <Compile Include="Execution\InternalProcessExecutor.cs" />
     <Compile Include="Exceptions\TestFailedException.cs" />
+    <Compile Include="Execution\TestExecutionResult.cs" />
+    <Compile Include="Execution\TestExecutionResults.cs" />
     <Compile Include="Parsers\Differs\AssemblyDiffer.cs" />
     <Compile Include="Exceptions\BuildFailedException.cs" />
     <Compile Include="Parsers\Differs\ChangedMethod.cs" />

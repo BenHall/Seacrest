@@ -74,7 +74,80 @@ namespace Seacrest.Analyser.Tests.Execution
 
                 GallioTestRunner runner = new GallioTestRunner();
                 var execute = runner.Execute(testsToExecute);
-                Assert.IsTrue(execute);
+                Assert.IsNotNull(execute);
+            }
+
+            [Test]
+            public void Can_parse_results_with_passing_tests_into_an_object()
+            {
+                string output =
+                    @"Gallio Echo - Version 3.2 build 517
+Get the latest version at http://www.gallio.org/ 
+
+
+2 run, 2 passed, 0 failed, 0 inconclusive, 0 skipped";
+
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test { ClassName = "Class1", MethodName = "Method1", AssemblyName = "TestAssembly1", PathToAssembly = Path.GetDirectoryName(assembly.Path) });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                TestExecutionResults results = runner.Parse(output, 0);
+                Assert.That(results.Run, Is.EqualTo(2));
+                Assert.That(results.Passed, Is.EqualTo(2));
+            }
+
+            [Test]
+            public void Can_parse_results_with_failing_tests_into_an_object()
+            {
+                string output =
+                    @"Gallio Echo - Version 3.2 build 517
+Get the latest version at http://www.gallio.org/ 
+
+
+2 run, 2 passed, 1 failed, 0 inconclusive, 0 skipped";
+
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test { ClassName = "Class1", MethodName = "Method1", AssemblyName = "TestAssembly1", PathToAssembly = Path.GetDirectoryName(assembly.Path) });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                TestExecutionResults results = runner.Parse(output, 0);
+                Assert.That(results.Failed, Is.EqualTo(1));
+            }
+
+            [Test]
+            public void Can_parse_results_with_skipped_and_inconclusive_which_are_added_together()
+            {
+                string output =
+                    @"Gallio Echo - Version 3.2 build 517
+Get the latest version at http://www.gallio.org/ 
+
+
+2 run, 2 passed, 1 failed, 3 inconclusive, 3 skipped";
+
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test { ClassName = "Class1", MethodName = "Method1", AssemblyName = "TestAssembly1", PathToAssembly = Path.GetDirectoryName(assembly.Path) });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                TestExecutionResults results = runner.Parse(output, 0);
+                Assert.That(results.Skipped, Is.EqualTo(6));
+            }
+
+            [Test]
+            public void Exit_code_of_non_0_sets_status_to_failed()
+            {
+                string output =
+                    @"Gallio Echo - Version 3.2 build 517
+Get the latest version at http://www.gallio.org/ 
+
+
+2 run, 2 passed, 1 failed, 3 inconclusive, 3 skipped";
+
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test { ClassName = "Class1", MethodName = "Method1", AssemblyName = "TestAssembly1", PathToAssembly = Path.GetDirectoryName(assembly.Path) });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                TestExecutionResults results = runner.Parse(output, 1);
+                Assert.That(results.ExecutionResult, Is.EqualTo(TestExecutionResult.Failed));
             }
         }
     }
