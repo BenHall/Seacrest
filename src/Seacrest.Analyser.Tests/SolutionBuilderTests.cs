@@ -19,7 +19,7 @@ namespace Seacrest.Analyser.Tests
         [TearDown]
         public void Teardown()
         {
-            Directory.Delete(_outDir);
+            Directory.Delete(_outDir, true);
         }
 
         [Test]

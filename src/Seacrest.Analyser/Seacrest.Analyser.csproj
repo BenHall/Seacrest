@@ -46,6 +46,8 @@
     <Compile Include="Exceptions\BuildFailedException.cs" />
     <Compile Include="ChangedMethod.cs" />
     <Compile Include="ChangeReason.cs" />
+    <Compile Include="IAssemblyDiffer.cs" />
+    <Compile Include="ISolutionBuilder.cs" />
     <Compile Include="SolutionBuilder.cs" />
     <Compile Include="Watcher\CodeChangedEventArgs.cs" />
     <Compile Include="Watcher\CodeChangeWatcher.cs" />

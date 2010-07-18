@@ -48,6 +48,7 @@
     <Compile Include="Builders\AssemblyBuilderExample.cs" />
     <Compile Include="Builders\AssemblyBuilderResult.cs" />
     <Compile Include="SolutionBuilderTests.cs" />
+    <Compile Include="UnitTestFinderTests.cs" />
     <Compile Include="Watcher\CodeChangeWatcherTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Seacrest.Analyser
 {
-    public class SolutionBuilder
+    public class SolutionBuilder : ISolutionBuilder
     {
         public bool Build(string pathToSolution, string outDir)
         {

@@ -10,6 +10,7 @@ namespace Seacrest.Analyser.Tests.Builders
     {
         private string _assemblyName;
         private Dictionary<string, Dictionary<string, string>> _classes = new Dictionary<string, Dictionary<string, string>>();
+        private string[] _references;
 
         public AssemblyBuilder AssemblyName(string assembyName)
         {
@@ -23,11 +24,27 @@ namespace Seacrest.Analyser.Tests.Builders
             return this;
         }
 
+        public AssemblyBuilder References(params string[] references)
+        {
+            _references = references;
+            return this;
+        }
+
         public AssemblyBuilderResult Build()
         {
             List<string> files = WriteClasses();
+            string assemblyPath;
 
-            string assemblyPath = BuildAssembly(files);
+            try
+            {
+                assemblyPath = BuildAssembly(files);
+            }
+            finally
+            {
+                foreach (var file in files)
+                    File.Delete(file);
+            }
+
             return new AssemblyBuilderResult {Path = assemblyPath};
         }
 
@@ -58,17 +75,21 @@ namespace Seacrest.Analyser.Tests.Builders
         private string BuildAssembly(List<string> files)
         {
             string csc = @"C:\Windows\Microsoft.NET\Framework\v3.5\csc.exe";
-            string assembly = Path.GetTempPath() + _assemblyName + ".dll";
+            var baseOutputPath = Path.GetTempPath();
+            string assembly = Path.Combine(baseOutputPath, _assemblyName + ".dll");
 
             StringBuilder builder = new StringBuilder();
+            if (_references != null)
+                foreach (var reference in _references)
+                    builder.AppendFormat(" /reference:{0} ", reference);
+
             foreach (var file in files)
-            {
                 builder.AppendFormat(" \"{0}\" ", file);
-            }
 
             string args = "/nologo /target:library /out:\"" + assembly + "\"" + builder;
 
             ProcessStartInfo startInfo = new ProcessStartInfo(csc, args);
+            startInfo.WorkingDirectory = baseOutputPath;
             startInfo.RedirectStandardError = true;
             startInfo.RedirectStandardOutput = true;
             startInfo.CreateNoWindow = true;
@@ -81,6 +102,10 @@ namespace Seacrest.Analyser.Tests.Builders
             process.WaitForExit();
 
             Console.WriteLine(output);
+
+            if(process.ExitCode != 0)
+                throw new InvalidOperationException("Build failed.");
+
             return assembly;
         }
     }

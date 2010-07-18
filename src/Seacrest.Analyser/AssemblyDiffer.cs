@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Seacrest.Analyser
 {
-    public class AssemblyDiffer
+    public class AssemblyDiffer : IAssemblyDiffer
     {
         public IEnumerable<ChangedMethod> FindModifiedMethods(string baseAssemblyPath, string compareToAssemblyPath)
         {
