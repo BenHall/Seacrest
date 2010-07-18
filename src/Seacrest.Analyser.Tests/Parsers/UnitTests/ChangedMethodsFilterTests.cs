@@ -28,5 +28,27 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
             Assert.That(testsToExecuted.Count(), Is.EqualTo(1));
             Assert.IsTrue(testsToExecuted.Contains(expectedTestToExecuted));
         }
+
+        [Test]
+        public void Given_a_list_of_method_usages_it_filters_down_based_on_single_changed_method()
+        {
+            ChangedMethod method = new ChangedMethod
+            {
+                ClassName = "Class1",
+                MethodName = "Method1"
+            };
+
+            MethodUsage usage = new MethodUsage { ClassName = "Class1", MethodName = "Method1" };
+
+            var expectedTestToExecuted = new UnitTest { ClassName = "Class1Tests", MethodName = "Method1Tests" };
+            usage.TestCoverage = new List<UnitTest>();
+            usage.TestCoverage.Add(expectedTestToExecuted);
+
+            ChangedMethodsFilter filter = new ChangedMethodsFilter();
+            IEnumerable<UnitTest> testsToExecuted = filter.FindUnitTestsAffectedByChange(method, new List<MethodUsage> { usage });
+
+            Assert.That(testsToExecuted.Count(), Is.EqualTo(1));
+            Assert.IsTrue(testsToExecuted.Contains(expectedTestToExecuted));
+        }
     }
 }

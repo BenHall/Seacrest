@@ -12,11 +12,16 @@ namespace Seacrest.Analyser
             List<UnitTest> tests = new List<UnitTest>();
             foreach (var changedMethod in changedMethods)
             {
-                var unitTests = methodUsages.Where(x => x.MethodName == changedMethod.MethodName && x.ClassName == changedMethod.ClassName).SelectMany(x=>x.TestCoverage);
+                var unitTests = FindUnitTestsAffectedByChange(changedMethod, methodUsages);
                 tests.AddRange(unitTests);
             }
 
             return tests;
+        }
+
+        public IEnumerable<UnitTest> FindUnitTestsAffectedByChange(ChangedMethod changedMethod, List<MethodUsage> methodUsages)
+        {
+            return methodUsages.Where(x => x.MethodName == changedMethod.MethodName && x.ClassName == changedMethod.ClassName).SelectMany(x=>x.TestCoverage);
         }
     }
 }
