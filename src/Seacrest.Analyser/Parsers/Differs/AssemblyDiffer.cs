@@ -2,7 +2,7 @@
 using Mono.Cecil;
 using System.Linq;
 
-namespace Seacrest.Analyser
+namespace Seacrest.Analyser.Parsers.Differs
 {
     public class AssemblyDiffer : IAssemblyDiffer
     {

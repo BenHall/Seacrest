@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Seacrest.Analyser
+namespace Seacrest.Analyser.Parsers.Differs
 {
     public interface IAssemblyDiffer
     {

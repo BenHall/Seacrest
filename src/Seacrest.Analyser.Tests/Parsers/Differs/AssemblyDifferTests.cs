@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Seacrest.Analyser.Parsers.Differs;
 using Seacrest.Analyser.Tests.Builders;
 
-namespace Seacrest.Analyser.Tests
+namespace Seacrest.Analyser.Tests.Parsers.Differs
 {
     public class AssemblyDifferTests
     {

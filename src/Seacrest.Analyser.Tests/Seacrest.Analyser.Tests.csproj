@@ -42,13 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyDifferTests.cs" />
+    <Compile Include="Parsers\Differs\AssemblyDifferTests.cs" />
     <Compile Include="Builders\AssemblyBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Builders\AssemblyBuilderExample.cs" />
     <Compile Include="Builders\AssemblyBuilderResult.cs" />
     <Compile Include="SolutionBuilderTests.cs" />
-    <Compile Include="UnitTestFinderTests.cs" />
+    <Compile Include="Parsers\UnitTests\UnitTestFinderTests.cs" />
     <Compile Include="Watcher\CodeChangeWatcherTests.cs" />
   </ItemGroup>
   <ItemGroup>

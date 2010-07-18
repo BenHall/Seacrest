@@ -42,13 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyDiffer.cs" />
+    <Compile Include="Parsers\Differs\AssemblyDiffer.cs" />
     <Compile Include="Exceptions\BuildFailedException.cs" />
-    <Compile Include="ChangedMethod.cs" />
-    <Compile Include="ChangeReason.cs" />
-    <Compile Include="IAssemblyDiffer.cs" />
+    <Compile Include="Parsers\Differs\ChangedMethod.cs" />
+    <Compile Include="Parsers\Differs\ChangeReason.cs" />
+    <Compile Include="Parsers\Differs\IAssemblyDiffer.cs" />
     <Compile Include="ISolutionBuilder.cs" />
+    <Compile Include="Parsers\UnitTests\MethodUsage.cs" />
     <Compile Include="SolutionBuilder.cs" />
+    <Compile Include="Parsers\UnitTests\UnitTest.cs" />
+    <Compile Include="Parsers\UnitTests\UnitTestFinder.cs" />
     <Compile Include="Watcher\CodeChangedEventArgs.cs" />
     <Compile Include="Watcher\CodeChangeWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

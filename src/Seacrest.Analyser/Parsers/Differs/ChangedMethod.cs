@@ -1,4 +1,4 @@
-﻿namespace Seacrest.Analyser
+﻿namespace Seacrest.Analyser.Parsers.Differs
 {
     public class ChangedMethod
     {
