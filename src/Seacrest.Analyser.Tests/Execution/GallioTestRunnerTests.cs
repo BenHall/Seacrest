@@ -53,7 +53,9 @@ namespace Seacrest.Analyser.Tests.Execution
                 List<string> filters = BuildFilterList(testsToExecute);
 
                 builder.Append(Path.Combine(firstTest.PathToAssembly, firstTest.AssemblyName + ".dll"));
+                builder.Append(" ");
                 builder.Append(String.Join(" AND ", filters.ToArray()));
+                builder.Append(" /np /v:Quiet /no-echo-results");
             }
 
             return builder.ToString();
