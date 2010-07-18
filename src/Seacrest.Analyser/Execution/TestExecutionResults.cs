@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Seacrest.Analyser.Execution
+﻿namespace Seacrest.Analyser.Execution
 {
     public class TestExecutionResults
     {
@@ -9,5 +7,6 @@ namespace Seacrest.Analyser.Execution
         public int Failed { get; set; }
         public int Skipped { get; set; }
         public TestExecutionResult ExecutionResult { get; set; }
+        public string Output { get; set; }
     }
 }

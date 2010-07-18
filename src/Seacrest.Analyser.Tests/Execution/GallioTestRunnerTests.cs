@@ -202,6 +202,24 @@ Get the latest version at http://www.gallio.org/
                 TestExecutionResults results = runner.Parse(output, 1);
                 Assert.That(results.Failed, Is.EqualTo(1));
             }
+
+            [Test]
+            public void Result_includes_completed_output()
+            {
+                string output =
+                    @"Gallio Echo - Version 3.2 build 517
+Get the latest version at http://www.gallio.org/ 
+
+
+2 run, 2 passed, 1 failed, 0 inconclusive, 0 skipped";
+
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test { ClassName = "Class1", MethodName = "Method1", AssemblyName = "TestAssembly1", PathToAssembly = Path.GetDirectoryName(assembly.Path) });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                TestExecutionResults results = runner.Parse(output, 0);
+                Assert.That(results.Output, Is.EqualTo(output));
+            }
         }
     }
 }

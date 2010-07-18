@@ -107,7 +107,7 @@ namespace Seacrest.Analyser.Execution
                 results.Skipped = Convert.ToInt32(m.Groups["inconclusive"].Value.Trim()) + Convert.ToInt32(m.Groups["skipped"].Value.Trim());
 
                 results.ExecutionResult = exitCode == 0 ? TestExecutionResult.Passed : TestExecutionResult.Failed;
-
+                results.Output = output;
                 return results;
             }
 

@@ -1,15 +1,18 @@
+using System;
 using System.IO;
 
 namespace Seacrest.Analyser.Watcher
 {
     public class CodeChangeWatcher
     {
+        private FileSystemWatcher watcher;
+
         public delegate void CodeChangedHandler(object sender, CodeChangedEventArgs e);
         public event CodeChangedHandler CodeChanged;
 
         public void Watch(string path)
         {
-            var watcher = new FileSystemWatcher(path);
+            watcher = new FileSystemWatcher(path);
             watcher.IncludeSubdirectories = true;
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite 
                                     | NotifyFilters.FileName | NotifyFilters.DirectoryName;
@@ -30,12 +33,19 @@ namespace Seacrest.Analyser.Watcher
 
         private void fileRenamed(object sender, RenamedEventArgs e)
         {
-            OnCodeChanged(new CodeChangedEventArgs{FullPath = e.FullPath, FileName = e.Name});
+            BlockEvents(() => OnCodeChanged(new CodeChangedEventArgs{FullPath = e.FullPath, FileName = e.Name}));
         }
 
         private void fileChanged(object sender, FileSystemEventArgs e)
         {
-            OnCodeChanged(new CodeChangedEventArgs { FullPath = e.FullPath, FileName = e.Name });            
+            BlockEvents(() => OnCodeChanged(new CodeChangedEventArgs { FullPath = e.FullPath, FileName = e.Name }));
+        }
+
+        private void BlockEvents(Action action)
+        {
+            watcher.EnableRaisingEvents = false;
+            action();
+            watcher.EnableRaisingEvents = true;
         }
     }
 }
