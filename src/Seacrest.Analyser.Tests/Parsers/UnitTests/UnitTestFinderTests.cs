@@ -53,6 +53,16 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
                 IEnumerable<MethodUsage> usages = finder.FindUsagesViaTests(assemblyTwo.Path);
                 Assert.IsNotNull(usages.Where(x=>x.MethodName == "Method1" && x.ClassName == "Class1"));
             }
+
+
+            [Test]
+            public void Returns_Method1_with_information_about_test_calling_it()
+            {
+                UnitTestFinder finder = new UnitTestFinder();
+                IEnumerable<MethodUsage> usages = finder.FindUsagesViaTests(assemblyTwo.Path);
+                var methodUsages = usages.Single(x => x.MethodName == "Method1" && x.ClassName == "Class1");
+                Assert.IsNotNull(methodUsages.Test.MethodName, "Method1Test");
+            }
         }
     }
 }

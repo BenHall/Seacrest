@@ -13,11 +13,14 @@ namespace Seacrest.Analyser.Parsers.UnitTests
             List<MethodUsage> methodUsages = new List<MethodUsage>();
             ModuleDefinition testAssembly = ModuleDefinition.ReadModule(assembly);
 
-            foreach (var method in testAssembly.Types.SelectMany(type => type.Methods))
+            foreach (var type in testAssembly.Types)
             {
-                methodUsages.AddRange(from instruction in method.Body.Instructions
-                                      where IsMethodCall(instruction)
-                                      select CreateUsage(instruction.Operand as MemberReference));
+                foreach (var method in type.Methods)
+                {
+                    methodUsages.AddRange(from instruction in method.Body.Instructions
+                                          where IsMethodCall(instruction)
+                                          select CreateUsage(instruction.Operand as MemberReference, testAssembly, type, method));
+                }
             }
 
             return methodUsages;
@@ -71,17 +74,26 @@ namespace Seacrest.Analyser.Parsers.UnitTests
             return instruction.OpCode.FlowControl == FlowControl.Call && instruction.OpCode.Code == Code.Callvirt;
         }
 
-        private MethodUsage CreateUsage(MemberReference operand)
+        private MethodUsage CreateUsage(MemberReference operand, ModuleDefinition assembly, TypeDefinition type, MethodDefinition method)
         {
             if (operand == null)
                 return null;
+
+            UnitTest test = new UnitTest
+            {
+                AssemblyName = assembly.Assembly.Name.FullName,
+                NamespaceName = type.Namespace,
+                ClassName = type.Name,
+                MethodName = method.Name
+            };
 
             var instructionCall = new MethodUsage
                 {
                     AssemblyName = operand.DeclaringType.Scope.Name + ".dll",
                     NamespaceName = operand.DeclaringType.Namespace,
                     ClassName = operand.DeclaringType.Name,
-                    MethodName = operand.Name
+                    MethodName = operand.Name,
+                    Test = test
                 };
 
             return instructionCall;
