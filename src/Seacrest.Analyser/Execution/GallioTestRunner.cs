@@ -91,7 +91,7 @@ namespace Seacrest.Analyser.Execution
 
         public TestExecutionResults Parse(string output, int exitCode)
         {
-            string pattern = "(?<run>.+) run, (?<passed>.+) passed, (?<failed>.+) failed, (?<inconclusive>.+) inconclusive, (?<skipped>.+) skipped";
+            string pattern = "(?<run>.+) run, (?<passed>.+) passed, (?<failed>.+) failed (.+), (?<inconclusive>.+) inconclusive, (?<skipped>.+) skipped";
             Regex regex = new Regex(pattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
 
             Match m = regex.Match(output);
