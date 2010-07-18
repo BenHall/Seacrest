@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangedMethodsFilter.cs" />
     <Compile Include="Parsers\Differs\AssemblyDiffer.cs" />
     <Compile Include="Exceptions\BuildFailedException.cs" />
     <Compile Include="Parsers\Differs\ChangedMethod.cs" />
