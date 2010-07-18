@@ -4,14 +4,15 @@ namespace Seacrest.Analyser.Execution
 {
     public class InternalProcessExecutor
     {
-        public static Process Start(string command, string arguments)
+        public static Process Start(string command, string arguments, string workingDirectory)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo(command, arguments)
                                              {
                                                  RedirectStandardError = true,
                                                  RedirectStandardOutput = true,
                                                  CreateNoWindow = true,
-                                                 UseShellExecute = false
+                                                 UseShellExecute = false,
+                                                 WorkingDirectory = workingDirectory
                                              };
 
             var process = new Process {StartInfo = startInfo};

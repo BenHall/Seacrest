@@ -40,7 +40,32 @@ namespace Seacrest.Analyser.Tests.Execution
                 GallioTestRunner runner = new GallioTestRunner();
                 string argument = runner.CreateArguments(testsToExecute);
 
-                Assert.IsTrue(argument.StartsWith("Path\\Assembly1.dll"));
+                Assert.IsTrue(argument.StartsWith("\"Path\\Assembly1.dll\""));
+            }
+
+            [Test]
+            public void Class_with_two_tests_has_a_joined_together_filter()
+            {
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test
+                {
+                    ClassName = "Class1",
+                    MethodName = "Method1",
+                    AssemblyName = "Assembly1",
+                    PathToAssembly = "Path\\"
+                });
+                testsToExecute.Add(new Test
+                {
+                    ClassName = "Class1",
+                    MethodName = "Method2",
+                    AssemblyName = "Assembly1",
+                    PathToAssembly = "Path\\"
+                });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                string argument = runner.CreateArguments(testsToExecute);
+
+                Assert.IsTrue(argument.Contains("Type:Class1 AND Member:Method1 OR Member:Method2"));
             }
         }
 

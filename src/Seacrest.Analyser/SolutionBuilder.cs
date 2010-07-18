@@ -13,7 +13,7 @@ namespace Seacrest.Analyser
 
             string options = string.Format("{0} /nologo /verbosity:m /p:OutDir={1}", Path.GetFileName(pathToSolution), outDir);
 
-            Process process = InternalProcessExecutor.Start(cmd, options);
+            Process process = InternalProcessExecutor.Start(cmd, options, Path.GetDirectoryName(pathToSolution));
             
             string output = process.StandardOutput.ReadToEnd();
 

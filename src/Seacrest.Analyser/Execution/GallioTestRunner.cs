@@ -13,8 +13,9 @@ namespace Seacrest.Analyser.Execution
     {
         public TestExecutionResults Execute(IEnumerable<Test> testsToExecute)
         {
+            //TODO: Make this as part of the solution...
             string gallioEchoExe = @"D:\Users\Ben Hall\Downloads\GallioBundle-3.2.517.0\bin - Copy\Gallio.Echo.exe";
-            Process process = InternalProcessExecutor.Start(gallioEchoExe, CreateArguments(testsToExecute));
+            Process process = InternalProcessExecutor.Start(gallioEchoExe, CreateArguments(testsToExecute), Path.GetDirectoryName(gallioEchoExe));
 
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
@@ -47,7 +48,45 @@ namespace Seacrest.Analyser.Execution
 
         private List<string> BuildFilterList(IEnumerable<Test> testsToExecute)
         {
-            return testsToExecute.Select(test => string.Format("(Type:{0} AND Member:{1})", test.ClassName, test.MethodName)).ToList();
+            List<string> filters = new List<string>();
+            Dictionary<string, List<string>> methodsPerClass = MethodsToExecuteInEachClass(testsToExecute);
+
+            foreach (var cls in methodsPerClass)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.AppendFormat("(Type:{0} AND ", cls.Key);
+                
+                var methods = GetMethodsFilterList(cls).ToArray();
+                builder.Append(string.Join(" OR ", methods));
+                builder.Append(")");
+
+                filters.Add(builder.ToString());
+            }
+            return filters;
+        }
+
+        private List<string> GetMethodsFilterList(KeyValuePair<string, List<string>> cls)
+        {
+            List<string> methods = new List<string>();
+            foreach (var method in cls.Value)
+            {
+                methods.Add(string.Format("Member:{0}", method));
+            }
+            return methods;
+        }
+
+        private Dictionary<string, List<string>> MethodsToExecuteInEachClass(IEnumerable<Test> testsToExecute)
+        {
+            Dictionary<string, List<String>> clsFilter = new Dictionary<string, List<string>>();
+            foreach (var test in testsToExecute)
+            {
+                if(!clsFilter.ContainsKey(test.ClassName))
+                    clsFilter.Add(test.ClassName, new List<string>());
+
+                List<string> listOfMethods = clsFilter[test.ClassName];
+                listOfMethods.Add(test.MethodName);
+            }
+            return clsFilter;
         }
 
         public TestExecutionResults Parse(string output, int exitCode)

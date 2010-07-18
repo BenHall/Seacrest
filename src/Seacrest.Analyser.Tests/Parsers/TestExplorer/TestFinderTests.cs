@@ -85,6 +85,16 @@ namespace Seacrest.Analyser.Tests.Parsers.TestExplorer
                 var methodUsages = usages.Single(x => x.MethodName == "Method1" && x.ClassName == "Class1");
                 Assert.That(methodUsages.TestCoverage.Count(), Is.EqualTo(2));
             }
+
+            [Test]
+            public void Path_and_assembly_name_set_correctly_on_test_objects()
+            {
+                TestFinder finder = new TestFinder();
+                IEnumerable<MethodUsage> usages = finder.FindUsagesViaTests(assemblyTwo.Path);
+                var methodUsages = usages.Single(x => x.MethodName == "Method1" && x.ClassName == "Class1");
+                Assert.That(methodUsages.TestCoverage.First().AssemblyName, Is.EqualTo("TestAssembly1.Tests"));
+                Assert.That(methodUsages.TestCoverage.First().PathToAssembly, Is.EqualTo(Path.GetDirectoryName(Path.GetTempPath())));
+            }
         }
     }
 }

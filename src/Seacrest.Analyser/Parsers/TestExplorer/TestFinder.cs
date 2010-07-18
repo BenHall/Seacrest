@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -7,10 +9,10 @@ namespace Seacrest.Analyser.Parsers.TestExplorer
 {
     public class TestFinder
     {
-        public IEnumerable<MethodUsage> FindUsagesViaTests(string assembly)
+        public IEnumerable<MethodUsage> FindUsagesViaTests(string pathToAssembly)
         {
             List<MethodUsage> methodUsages = new List<MethodUsage>();
-            ModuleDefinition testAssembly = ModuleDefinition.ReadModule(assembly);
+            ModuleDefinition testAssembly = ModuleDefinition.ReadModule(pathToAssembly);
 
             foreach (var type in testAssembly.Types)
             {
@@ -18,7 +20,7 @@ namespace Seacrest.Analyser.Parsers.TestExplorer
                 {
                     foreach (var instruction in method.Body.Instructions.Where(IsMethodCall))
                     {
-                        var methodUsage = CreateUsage(instruction.Operand as MemberReference, testAssembly, type, method);
+                        var methodUsage = CreateUsage(instruction.Operand as MemberReference, testAssembly, type, method, pathToAssembly);
                         var existingUsage = methodUsages.SingleOrDefault(x => x.MethodName == methodUsage.MethodName && x.ClassName == methodUsage.ClassName);
 
                         if (existingUsage != null)
@@ -37,14 +39,15 @@ namespace Seacrest.Analyser.Parsers.TestExplorer
             return instruction.OpCode.FlowControl == FlowControl.Call && instruction.OpCode.Code == Code.Callvirt;
         }
 
-        private MethodUsage CreateUsage(MemberReference operand, ModuleDefinition assembly, TypeDefinition type, MethodDefinition method)
+        private MethodUsage CreateUsage(MemberReference operand, ModuleDefinition assembly, TypeDefinition type, MethodDefinition method, string testAssemblyPath)
         {
             if (operand == null)
                 return null;
 
             Test test = new Test
                 {
-                    AssemblyName = assembly.Assembly.Name.FullName,
+                    PathToAssembly = Path.GetDirectoryName(testAssemblyPath),
+                    AssemblyName = assembly.Assembly.Name.Name,
                     NamespaceName = type.Namespace,
                     ClassName = type.Name,
                     MethodName = method.Name
