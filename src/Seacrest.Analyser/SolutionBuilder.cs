@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Seacrest.Analyser.Exceptions;
 using System.IO;
+using Seacrest.Analyser.Execution;
 
 namespace Seacrest.Analyser
 {
@@ -12,16 +13,8 @@ namespace Seacrest.Analyser
 
             string options = string.Format("{0} /nologo /verbosity:m /p:OutDir={1}", Path.GetFileName(pathToSolution), outDir);
 
-            ProcessStartInfo startInfo = new ProcessStartInfo(cmd, options);
-            startInfo.WorkingDirectory = Path.GetDirectoryName(pathToSolution);
-            startInfo.RedirectStandardError = true;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.CreateNoWindow = true;
-            startInfo.UseShellExecute = false;
-            var process = new Process();
-            process.StartInfo = startInfo;
-            process.Start();
-
+            Process process = InternalProcessExecutor.Start(cmd, options);
+            
             string output = process.StandardOutput.ReadToEnd();
 
             process.WaitForExit(1000);

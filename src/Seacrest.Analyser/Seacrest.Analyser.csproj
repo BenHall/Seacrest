@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="ChangedMethodsFilter.cs" />
     <Compile Include="Execution\GallioTestRunner.cs" />
+    <Compile Include="Execution\InternalProcessExecutor.cs" />
+    <Compile Include="Exceptions\TestFailedException.cs" />
     <Compile Include="Parsers\Differs\AssemblyDiffer.cs" />
     <Compile Include="Exceptions\BuildFailedException.cs" />
     <Compile Include="Parsers\Differs\ChangedMethod.cs" />
