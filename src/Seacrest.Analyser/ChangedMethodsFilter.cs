@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Seacrest.Analyser.Parsers.Differs;
-using Seacrest.Analyser.Parsers.UnitTests;
+using Seacrest.Analyser.Parsers.TestExplorer;
 
 namespace Seacrest.Analyser
 {
     public class ChangedMethodsFilter
     {
-        public IEnumerable<UnitTest> FindUnitTestsAffectedByChanges(List<ChangedMethod> changedMethods, List<MethodUsage> methodUsages)
+        public IEnumerable<Test> FindUnitTestsAffectedByChanges(List<ChangedMethod> changedMethods, List<MethodUsage> methodUsages)
         {
-            List<UnitTest> tests = new List<UnitTest>();
+            List<Test> tests = new List<Test>();
             foreach (var changedMethod in changedMethods)
             {
                 var unitTests = FindUnitTestsAffectedByChange(changedMethod, methodUsages);
@@ -19,7 +19,7 @@ namespace Seacrest.Analyser
             return tests;
         }
 
-        public IEnumerable<UnitTest> FindUnitTestsAffectedByChange(ChangedMethod changedMethod, List<MethodUsage> methodUsages)
+        public IEnumerable<Test> FindUnitTestsAffectedByChange(ChangedMethod changedMethod, List<MethodUsage> methodUsages)
         {
             return methodUsages.Where(x => x.MethodName == changedMethod.MethodName && x.ClassName == changedMethod.ClassName).SelectMany(x=>x.TestCoverage);
         }

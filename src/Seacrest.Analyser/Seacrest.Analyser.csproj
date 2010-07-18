@@ -49,10 +49,10 @@
     <Compile Include="Parsers\Differs\ChangeReason.cs" />
     <Compile Include="Parsers\Differs\IAssemblyDiffer.cs" />
     <Compile Include="ISolutionBuilder.cs" />
-    <Compile Include="Parsers\UnitTests\MethodUsage.cs" />
+    <Compile Include="Parsers\TestExplorer\MethodUsage.cs" />
     <Compile Include="SolutionBuilder.cs" />
-    <Compile Include="Parsers\UnitTests\UnitTest.cs" />
-    <Compile Include="Parsers\UnitTests\UnitTestFinder.cs" />
+    <Compile Include="Parsers\TestExplorer\Test.cs" />
+    <Compile Include="Parsers\TestExplorer\TestFinder.cs" />
     <Compile Include="Watcher\CodeChangedEventArgs.cs" />
     <Compile Include="Watcher\CodeChangeWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

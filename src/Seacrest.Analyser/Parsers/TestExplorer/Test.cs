@@ -1,6 +1,6 @@
-﻿namespace Seacrest.Analyser.Parsers.UnitTests
+﻿namespace Seacrest.Analyser.Parsers.TestExplorer
 {
-    public class UnitTest
+    public class Test
     {
         public string AssemblyName { get; set; }
         public string NamespaceName { get; set; }

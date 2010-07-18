@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Seacrest.Analyser.Parsers.UnitTests
+namespace Seacrest.Analyser.Parsers.TestExplorer
 {
     public class MethodUsage
     {
@@ -9,6 +9,6 @@ namespace Seacrest.Analyser.Parsers.UnitTests
         public string ClassName { get; set; }
         public string MethodName { get; set; }
 
-        public List<UnitTest> TestCoverage { get; set; }
+        public List<Test> TestCoverage { get; set; }
     }
 }

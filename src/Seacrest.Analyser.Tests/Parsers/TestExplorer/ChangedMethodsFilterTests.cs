@@ -1,10 +1,10 @@
 using System.Linq;
 using NUnit.Framework;
 using Seacrest.Analyser.Parsers.Differs;
-using Seacrest.Analyser.Parsers.UnitTests;
 using System.Collections.Generic;
+using Seacrest.Analyser.Parsers.TestExplorer;
 
-namespace Seacrest.Analyser.Tests.Parsers.UnitTests
+namespace Seacrest.Analyser.Tests.Parsers.TestExplorer
 {
     [TestFixture]
     public class ChangedMethodsFilterTests
@@ -18,12 +18,12 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
 
             MethodUsage usage = new MethodUsage {ClassName = "Class1", MethodName = "Method1"};
 
-            var expectedTestToExecuted = new UnitTest{ClassName = "Class1Tests", MethodName = "Method1Tests"};
-            usage.TestCoverage = new List<UnitTest>();
+            var expectedTestToExecuted = new Test{ClassName = "Class1Tests", MethodName = "Method1Tests"};
+            usage.TestCoverage = new List<Test>();
             usage.TestCoverage.Add(expectedTestToExecuted);
 
             ChangedMethodsFilter filter = new ChangedMethodsFilter();
-            IEnumerable<UnitTest> testsToExecuted = filter.FindUnitTestsAffectedByChanges(new List<ChangedMethod> {method}, new List<MethodUsage> {usage});
+            IEnumerable<Test> testsToExecuted = filter.FindUnitTestsAffectedByChanges(new List<ChangedMethod> {method}, new List<MethodUsage> {usage});
 
             Assert.That(testsToExecuted.Count(), Is.EqualTo(1));
             Assert.IsTrue(testsToExecuted.Contains(expectedTestToExecuted));
@@ -40,12 +40,12 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
 
             MethodUsage usage = new MethodUsage { ClassName = "Class1", MethodName = "Method1" };
 
-            var expectedTestToExecuted = new UnitTest { ClassName = "Class1Tests", MethodName = "Method1Tests" };
-            usage.TestCoverage = new List<UnitTest>();
+            var expectedTestToExecuted = new Test { ClassName = "Class1Tests", MethodName = "Method1Tests" };
+            usage.TestCoverage = new List<Test>();
             usage.TestCoverage.Add(expectedTestToExecuted);
 
             ChangedMethodsFilter filter = new ChangedMethodsFilter();
-            IEnumerable<UnitTest> testsToExecuted = filter.FindUnitTestsAffectedByChange(method, new List<MethodUsage> { usage });
+            IEnumerable<Test> testsToExecuted = filter.FindUnitTestsAffectedByChange(method, new List<MethodUsage> { usage });
 
             Assert.That(testsToExecuted.Count(), Is.EqualTo(1));
             Assert.IsTrue(testsToExecuted.Contains(expectedTestToExecuted));

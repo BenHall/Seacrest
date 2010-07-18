@@ -3,9 +3,9 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Seacrest.Analyser.Parsers.UnitTests
+namespace Seacrest.Analyser.Parsers.TestExplorer
 {
-    public class UnitTestFinder
+    public class TestFinder
     {
         public IEnumerable<MethodUsage> FindUsagesViaTests(string assembly)
         {
@@ -42,7 +42,7 @@ namespace Seacrest.Analyser.Parsers.UnitTests
             if (operand == null)
                 return null;
 
-            UnitTest test = new UnitTest
+            Test test = new Test
                 {
                     AssemblyName = assembly.Assembly.Name.FullName,
                     NamespaceName = type.Namespace,
@@ -56,7 +56,7 @@ namespace Seacrest.Analyser.Parsers.UnitTests
                     NamespaceName = operand.DeclaringType.Namespace,
                     ClassName = operand.DeclaringType.Name,
                     MethodName = operand.Name,
-                    TestCoverage = new List<UnitTest> {test}
+                    TestCoverage = new List<Test> {test}
                 };
 
             return instructionCall;
