@@ -19,7 +19,7 @@ namespace Seacrest.Analyser.Execution
 
                 builder.Append(Path.Combine(firstTest.PathToAssembly, firstTest.AssemblyName + ".dll"));
                 builder.Append(" ");
-                builder.Append(String.Join(" AND ", filters.ToArray()));
+                builder.Append("/filter:" + String.Join(" AND ", filters.ToArray()));
                 builder.Append(" /np /v:Quiet /no-echo-results");
             }
 

@@ -18,6 +18,7 @@ namespace Seacrest.Analyser.Tests.Execution
             string argument = runner.CreateArguments(testsToExecute);
 
             Assert.IsTrue(argument.Contains("Type:Class1 AND Member:Method1"));
+            Assert.IsTrue(argument.Contains("/filter:"));
         }
 
         [Test]
