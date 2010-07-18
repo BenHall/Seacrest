@@ -13,12 +13,14 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
     {
         AssemblyBuilderResult assemblyOne;
         AssemblyBuilderResult assemblyTwo;
+        AssemblyBuilderResult assemblyThree;
 
         [TearDown]
         public void Teardown()
         {
             File.Delete(assemblyOne.Path);
             File.Delete(assemblyTwo.Path);
+            File.Delete(assemblyThree.Path);
         }
 
         [TestFixture]
@@ -44,6 +46,18 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
                                                                                             "c.Method1();"},
                                                                         })
                                         .Build();
+
+                AssemblyBuilder builder3 = new AssemblyBuilder();
+                assemblyThree = builder3.AssemblyName("TestAssembly1.Tests")
+                                        .References(Path.GetFileName(assemblyOne.Path))
+                                        .WithClassAndMethods("Class1Tests", new Dictionary<string, string>
+                                                                        {
+                                                                            {"Method1Test", "var c = new Class1();" + Environment.NewLine + 
+                                                                                            "c.Method1();"},
+                                                                            {"Method1Test2", "var c = new Class1();" + Environment.NewLine + 
+                                                                            "c.Method1();"},
+                                                                        })
+                                        .Build();
             }
 
             [Test]
@@ -54,14 +68,22 @@ namespace Seacrest.Analyser.Tests.Parsers.UnitTests
                 Assert.IsNotNull(usages.Where(x=>x.MethodName == "Method1" && x.ClassName == "Class1"));
             }
 
-
             [Test]
             public void Returns_Method1_with_information_about_test_calling_it()
             {
                 UnitTestFinder finder = new UnitTestFinder();
                 IEnumerable<MethodUsage> usages = finder.FindUsagesViaTests(assemblyTwo.Path);
                 var methodUsages = usages.Single(x => x.MethodName == "Method1" && x.ClassName == "Class1");
-                Assert.IsNotNull(methodUsages.Test.MethodName, "Method1Test");
+                Assert.That(methodUsages.TestCoverage.First().MethodName, Is.EqualTo("Method1Test"));
+            }
+
+            [Test]
+            public void Returns_both_unit_tests_for_single_usage()
+            {
+                UnitTestFinder finder = new UnitTestFinder();
+                IEnumerable<MethodUsage> usages = finder.FindUsagesViaTests(assemblyThree.Path);
+                var methodUsages = usages.Single(x => x.MethodName == "Method1" && x.ClassName == "Class1");
+                Assert.That(methodUsages.TestCoverage.Count(), Is.EqualTo(2));
             }
         }
     }
