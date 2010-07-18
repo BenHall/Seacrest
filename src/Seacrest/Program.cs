@@ -26,15 +26,17 @@ namespace Seacrest
 
     public class CoreApp
     {
-        string outDir = @"C:\temp\seacrest\outDir\";
-        string oldAssembly = @"D:\SourceControl\Seacrest\example\UnitTesting1\UnitTesting1\bin\Debug\UnitTesting1.dll";
-        string newAssembly;
+        string outDir = @"C:\temp\seacrest\outDir\_latest\\";
+        string oldOutDir = @"C:\temp\seacrest\outDir\_old\\";
         private string solution = @"D:\SourceControl\Seacrest\example\UnitTesting1\UnitTesting1.sln";
+        string oldAssembly;
+        string newAssembly;
         private string testAssembly;
 
         public CoreApp()
         {
             newAssembly = Path.Combine(outDir, "UnitTesting1.dll");
+            oldAssembly = Path.Combine(oldOutDir, "UnitTesting1.dll");
             testAssembly = Path.Combine(outDir, "UnitTesting1.Tests.dll");
         }
 
@@ -57,8 +59,29 @@ namespace Seacrest
                 GallioTestRunner runner = new GallioTestRunner();
                 var testExecutionResults = runner.Execute(findUnitTestsAffectedByChanges);
 
-                Console.WriteLine(testExecutionResults.ExecutionResult);
-                Console.WriteLine(testExecutionResults.Passed);
+                if (testExecutionResults != null)
+                    OutputResults(testExecutionResults);
+
+                MoveAssemblyToOld(oldOutDir, outDir);
+            }
+        }
+
+        private void OutputResults(TestExecutionResults testExecutionResults)
+        {
+            Console.WriteLine(testExecutionResults.ExecutionResult);
+            Console.WriteLine(testExecutionResults.Passed);
+        }
+
+        private void MoveAssemblyToOld(string oldDir, string latestDir)
+        {
+            foreach (var file in Directory.GetFiles(oldDir))
+            {
+                File.Delete(file);
+            }
+
+            foreach (var file in Directory.GetFiles(latestDir))
+            {
+                File.Copy(file, Path.Combine(oldDir, Path.GetFileName(file)));
             }
         }
     }

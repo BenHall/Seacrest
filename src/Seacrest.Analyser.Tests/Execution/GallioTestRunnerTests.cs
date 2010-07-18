@@ -103,6 +103,16 @@ namespace Seacrest.Analyser.Tests.Execution
             }
 
             [Test]
+            public void No_tests_results_in_null_being_returned()
+            {
+                List<Test> testsToExecute = new List<Test>();
+
+                GallioTestRunner runner = new GallioTestRunner();
+                var execute = runner.Execute(testsToExecute);
+                Assert.IsNull(execute);
+            }
+
+            [Test]
             public void Can_parse_results_with_passing_tests_into_an_object()
             {
                 string output =
@@ -173,6 +183,24 @@ Get the latest version at http://www.gallio.org/
                 GallioTestRunner runner = new GallioTestRunner();
                 TestExecutionResults results = runner.Parse(output, 1);
                 Assert.That(results.ExecutionResult, Is.EqualTo(TestExecutionResult.Failed));
+            }
+
+            [Test]
+            public void Parses_when_failed_has_an_error_included_in_output()
+            {
+                string output =
+                    @"Gallio Echo - Version 3.2 build 517
+Get the latest version at http://www.gallio.org/ 
+
+
+2 run, 2 passed, 1 failed (1 error), 3 inconclusive, 3 skipped";
+
+                List<Test> testsToExecute = new List<Test>();
+                testsToExecute.Add(new Test { ClassName = "Class1", MethodName = "Method1", AssemblyName = "TestAssembly1", PathToAssembly = Path.GetDirectoryName(assembly.Path) });
+
+                GallioTestRunner runner = new GallioTestRunner();
+                TestExecutionResults results = runner.Parse(output, 1);
+                Assert.That(results.Failed, Is.EqualTo(1));
             }
         }
     }

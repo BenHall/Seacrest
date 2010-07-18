@@ -9,8 +9,8 @@ namespace UnitTesting1
     {
         public string Method1()
         {
-            throw new NotImplementedException();
-            return "Method1 String   ";
+            //throw new NotImplementedException();
+            return "Method1 String";
         }
 
         public string Method2()

@@ -13,6 +13,9 @@ namespace Seacrest.Analyser.Execution
     {
         public TestExecutionResults Execute(IEnumerable<Test> testsToExecute)
         {
+            if (!testsToExecute.Any())
+                return null;
+
             //TODO: Make this as part of the solution...
             string gallioEchoExe = @"D:\Users\Ben Hall\Downloads\GallioBundle-3.2.517.0\bin - Copy\Gallio.Echo.exe";
             Process process = InternalProcessExecutor.Start(gallioEchoExe, CreateArguments(testsToExecute), Path.GetDirectoryName(gallioEchoExe));
@@ -32,7 +35,7 @@ namespace Seacrest.Analyser.Execution
         public string CreateArguments(IEnumerable<Test> testsToExecute)
         {
             StringBuilder builder = new StringBuilder();
-            var firstTest = testsToExecute.First();
+            var firstTest = testsToExecute.FirstOrDefault();
             if (firstTest != null)
             {
                 List<string> filters = BuildFilterList(testsToExecute);
@@ -91,7 +94,7 @@ namespace Seacrest.Analyser.Execution
 
         public TestExecutionResults Parse(string output, int exitCode)
         {
-            string pattern = "(?<run>.+) run, (?<passed>.+) passed, (?<failed>.+) failed (.+), (?<inconclusive>.+) inconclusive, (?<skipped>.+) skipped";
+            string pattern = "(?<run>.+) run, (?<passed>.+) passed, (?<failed>.+) failed (.*), (?<inconclusive>.+) inconclusive, (?<skipped>.+) skipped";
             Regex regex = new Regex(pattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
 
             Match m = regex.Match(output);
