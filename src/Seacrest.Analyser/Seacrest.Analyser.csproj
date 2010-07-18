@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangedMethodsFilter.cs" />
+    <Compile Include="Parsers\TestExplorer\ChangedMethodsFilter.cs" />
     <Compile Include="Execution\GallioTestRunner.cs" />
     <Compile Include="Execution\InternalProcessExecutor.cs" />
     <Compile Include="Exceptions\TestFailedException.cs" />

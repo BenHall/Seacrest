@@ -21,7 +21,7 @@ namespace Seacrest.Analyser.Watcher
             watcher.EnableRaisingEvents = true;
         }
 
-        public void OnCodeChanged(CodeChangedEventArgs e)
+        private void OnCodeChanged(CodeChangedEventArgs e)
         {
             CodeChangedHandler handler = CodeChanged;
             if (handler != null) 

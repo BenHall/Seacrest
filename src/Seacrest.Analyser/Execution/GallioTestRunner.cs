@@ -11,7 +11,7 @@ namespace Seacrest.Analyser.Execution
 {
     public class GallioTestRunner
     {
-        public TestExecutionResults Execute(List<Test> testsToExecute)
+        public TestExecutionResults Execute(IEnumerable<Test> testsToExecute)
         {
             string gallioEchoExe = @"D:\Users\Ben Hall\Downloads\GallioBundle-3.2.517.0\bin - Copy\Gallio.Echo.exe";
             Process process = InternalProcessExecutor.Start(gallioEchoExe, CreateArguments(testsToExecute));
@@ -28,7 +28,7 @@ namespace Seacrest.Analyser.Execution
             return null;
         }
 
-        public string CreateArguments(List<Test> testsToExecute)
+        public string CreateArguments(IEnumerable<Test> testsToExecute)
         {
             StringBuilder builder = new StringBuilder();
             var firstTest = testsToExecute.First();
